@@ -32,11 +32,12 @@ namespace Owo
         {
             return new Point(rnd.Next(0, pGameSize.X), rnd.Next(0, pGameSize.Y));
         }
-        public static Apple Eat(Graphics pGraphics, Snake pSnake, Point pGameSize, int pSize, Apple pApple)
+        public static Apple Eat(Game pGame, Graphics pGraphics, Snake pSnake, Point pGameSize, int pSize, Apple pApple)
         {
             if (pSnake.Head.IsOnBlock(pApple))
             {
                 pSnake.Expand();
+                pGame.MoveDelay -= 50;
                 return GenerateApple(pGraphics, pSnake, pGameSize, pSize);
             }
             else

@@ -124,44 +124,16 @@ namespace Owo
             switch (key)
             {
                 case (Keys.D):
-                    if (chk_EasyMode.Checked && !(game.snake.Direction == Snake.Directions.Left))
-                    {
-                        game.MoveSnake(Snake.Directions.Right);
-                    }
-                    else if(!chk_EasyMode.Checked)
-                    {
-                        game.MoveSnake(Snake.Directions.Right);
-                    }
+                    fuckwad_function(Directions.Right);
                     break;
                 case (Keys.A):
-                    if (chk_EasyMode.Checked && !(game.snake.Direction == Snake.Directions.Right))
-                    {
-                        game.MoveSnake(Snake.Directions.Left);
-                    }
-                    else if (!chk_EasyMode.Checked)
-                    {
-                        game.MoveSnake(Snake.Directions.Left);
-                    }
+                    fuckwad_function(Directions.Left);
                     break;
                 case (Keys.W):
-                    if (chk_EasyMode.Checked && !(game.snake.Direction == Snake.Directions.Down))
-                    {
-                        game.MoveSnake(Snake.Directions.Up);
-                    }
-                    else if (!chk_EasyMode.Checked)
-                    {
-                        game.MoveSnake(Snake.Directions.Up);
-                    }
+                    fuckwad_function(Directions.Up);
                     break;
                 case (Keys.S):
-                    if (chk_EasyMode.Checked && !(game.snake.Direction == Snake.Directions.Up))
-                    {
-                        game.MoveSnake(Snake.Directions.Down);
-                    }
-                    else if (!chk_EasyMode.Checked)
-                    {
-                        game.MoveSnake(Snake.Directions.Down);
-                    }
+                    fuckwad_function(Directions.Down);
                     break;
                 case (Keys.Space):
                     game.MoveSnake(Snake.Directions.Last);
@@ -171,12 +143,46 @@ namespace Owo
             }
 
         }
+        private void fuckwad_function(Directions NewDirection, Directions DirectionsAgainst)
+        {
+            if (chk_EasyMode.Checked && !(game.snake.Direction == DirectionsAgainst))
+            {
+                game.MoveSnake(NewDirection);
+            }
+            else if (!chk_EasyMode.Checked)
+            {
+                game.MoveSnake(NewDirection);
+            }
+        }
+        private void fuckwad_function(Directions NewDirection)
+        {
+            switch (NewDirection)
+            {
+                case Directions.Up:
+                    fuckwad_function(NewDirection, Directions.Down);
+                    break;
+                case Directions.Down:
+                    fuckwad_function(NewDirection, Directions.Up);
+                    break;
+                case Directions.Right:
+                    fuckwad_function(NewDirection, Directions.Left);
+                    break;
+                case Directions.Left:
+                    fuckwad_function(NewDirection, Directions.Right);
+                    break;
+            }
+        }
         private void chk_EasyMode_CheckedChanged(object sender, EventArgs e)
         {
             if (!chk_EasyMode.Checked)
             {
                 Left.Enabled = Right.Enabled = Down.Enabled = Up.Enabled = true;
             }
+        }
+
+        private void chk_noBounds_CheckedChanged(object sender, EventArgs e)
+        {
+            game.NoBounds = chk_noBounds.Checked;
         }
     }
 }

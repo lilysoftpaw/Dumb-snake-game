@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -26,6 +27,7 @@ namespace Owo
         private Stopwatch stopwatch;
         private System.Windows.Forms.Timer Ticker;
         private int m_movedelay;
+        private bool m_noBounds = false;
         private Graphics m_graphics;
         private Apple Apple;
         public int MoveDelay
@@ -51,6 +53,7 @@ namespace Owo
         {
             m_gamePanel = gamePanel;
             m_graphics = gamePanel.CreateGraphics();
+            m_noBounds = false;
             snake = new Snake(m_graphics,BlockPixelSize);
             Ticker = new System.Windows.Forms.Timer();
             Ticker.Interval = 1;
@@ -80,7 +83,7 @@ namespace Owo
                 m_score++;
                 snake.AteApple= false;
             }
-            if (snake.IsSnakeOnSnake)
+            if (snake.IsSnakeOnSnake || (outOfBoundsGrid(snake.Head) && !NoBounds))
             {
                 m_gameOver= true;
                 stopwatch.Stop();
@@ -101,7 +104,7 @@ namespace Owo
             if (!GameOver)
             {
                 snake.Move(Direction);
-                Apple = Apple.Eat(m_graphics, snake, new Point(GridSize, GridSize), BlockPixelSize, Apple);
+                Apple = Apple.Eat(this, m_graphics, snake, new Point(GridSize, GridSize), BlockPixelSize, Apple);
                 stopwatch.Restart();
             }
             
@@ -122,6 +125,35 @@ namespace Owo
             PaintEvent.Graphics.FillRectangle(GameBackground, new Rectangle(0, 0, m_gamePanel.Size.Width, m_gamePanel.Size.Height));
             PaintEvent.Dispose();
             m_gamePanel.Update();
+        }
+
+        private bool inBounds(int min, int max, int input)
+        {
+            
+            return (input >= min && input < max);
+        }
+        private bool inBounds(int min, int max, Block input)
+        {
+            return inBounds(min, max, input.X) && inBounds(min,max, input.Y);
+        }
+        private bool inBoundsGrid(Block input)
+        {
+            return inBounds(0, GridSize, input);
+        }
+        private bool outOfBoundsGrid(Block input)
+        {
+            return !inBoundsGrid(input);
+        }
+        public bool NoBounds
+        {
+            get
+            {
+                return m_noBounds;
+            }
+            set
+            {
+                m_noBounds = value;
+            }
         }
     }
 }
